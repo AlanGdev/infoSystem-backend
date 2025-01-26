@@ -1,15 +1,18 @@
 const express=require('express')
 const cors=require('cors')
-const app=express()
 const upload=require('./middlewares/multer')
+const path=require('path')
+const techRouter=require('./routes/tech')
+const mongoose = require('mongoose');
+const app=express()
 
-const corsOption={
-    origin: '*', // Autorise uniquement cette origine (toutes)
-    methods: ['GET', 'POST','PUT','DELETE'], // Autorise uniquement GET et POST
-}
+// Connexion à MongoDB
+mongoose.connect('mongodb+srv://alan:nalag@cluster0.krjmg.mongodb.net/Cluster0?retryWrites=true&w=majority')
+.then(() => console.log('Connexion à MongoDB réussie'))
+.catch((err) => console.error('Erreur de connexion à MongoDB :', err));
 
 app.use(express.json())
-app.use(cors(corsOption))
+app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use((req, res, next) => {
 	res.setHeader('Access-Control-Allow-Origin', '*');
 	res.setHeader(
@@ -23,12 +26,6 @@ app.use((req, res, next) => {
 	next();
 });
 
-app.post('/',upload.single('file'),(req,res)=>{
-    console.log('accès serveur')
-	console.log(req.file)
-	console.log((req.body))
-    const reponse={message:(req.body)}
-    res.json(reponse)
-})
+app.use('/techs',techRouter)
 
 module.exports=app
