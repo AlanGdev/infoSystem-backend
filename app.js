@@ -3,6 +3,7 @@ const cors=require('cors')
 const upload=require('./middlewares/multer')
 const path=require('path')
 const techRouter=require('./routes/tech')
+const carRouter=require('./routes/car')
 const mongoose = require('mongoose');
 const app=express()
 
@@ -27,5 +28,6 @@ app.use((req, res, next) => {
 });
 
 app.use('/techs',techRouter)
+app.use('/cars',carRouter)
 
 module.exports=app
